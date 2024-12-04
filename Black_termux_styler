@@ -1,0 +1,141 @@
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <string>
+#include <unistd.h>
+
+using namespace std;
+
+string storedUsername, storedPassword;
+
+void readLoginData() {
+    ifstream file("login.txt");
+    if (file.is_open()) {
+        getline(file, storedUsername);
+        getline(file, storedPassword);
+        file.close();
+    } else {
+        cout << "No login data found. Please set up a new username and password.\n";
+    }
+}
+
+void writeLoginData(const string& username, const string& password) {
+    ofstream file("login.txt");
+    file << username << "\n" << password;
+    file.close();
+}
+
+bool login() {
+    string username, password;
+    cout << "Enter Username: ";
+    cin >> username;
+    cout << "Enter Password: ";
+    cin >> password;
+    return username == storedUsername && password == storedPassword;
+}
+
+void showOptions() {
+    cout << "------------------------------------------\n";
+    cout << "            Welcome to Black1446          \n";
+    cout << "------------------------------------------\n";
+    for (int i = 1; i <= 100; ++i) {
+        cout << i << ". Option " << i << "\n";
+    }
+    cout << "------------------------------------------\n";
+}
+
+void systemInfo() {
+    system("uname -a");
+}
+
+void runPython() {
+    system("python3 script.py");
+}
+
+void showDir() {
+    system("ls");
+}
+
+void networkStatus() {
+    system("ifconfig");
+}
+
+void diskUsage() {
+    system("df -h");
+}
+
+void runningProcesses() {
+    system("top");
+}
+
+void showDateTime() {
+    system("date");
+}
+
+void pingGoogle() {
+    system("ping -c 4 google.com");
+}
+
+void updateSystem() {
+    system("sudo apt update && sudo apt upgrade");
+}
+
+void setupLogin() {
+    string username, password;
+    cout << "Set Username: ";
+    cin >> username;
+    cout << "Set Password: ";
+    cin >> password;
+    writeLoginData(username, password);
+    cout << "Login data saved successfully.\n";
+}
+
+int main() {
+    readLoginData();
+
+    if (storedUsername.empty() || storedPassword.empty()) {
+        cout << "No existing login data found.\n";
+        setupLogin();
+    }
+
+    while (true) {
+        if (login()) {
+            int choice;
+            while (true) {
+                showOptions();
+                cout << "Select an option: ";
+                cin >> choice;
+
+                if (choice == 1) {
+                    systemInfo();
+                } else if (choice == 2) {
+                    runPython();
+                } else if (choice == 3) {
+                    showDir();
+                } else if (choice == 4) {
+                    networkStatus();
+                } else if (choice == 5) {
+                    diskUsage();
+                } else if (choice == 6) {
+                    runningProcesses();
+                } else if (choice == 7) {
+                    showDateTime();
+                } else if (choice == 8) {
+                    pingGoogle();
+                } else if (choice == 9) {
+                    updateSystem();
+                } else if (choice == 100) {
+                    cout << "Exiting...\n";
+                    return 0;
+                } else {
+                    cout << "Invalid choice! Please select again.\n";
+                }
+            }
+        } else {
+            cout << "Invalid username or password. Try again.\n";
+            sleep(2);
+        }
+    }
+
+    return 0;
+}
